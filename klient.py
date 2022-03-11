@@ -91,8 +91,7 @@ def receive():
             if message == "NICK":
                 s.send(nickname.encode('utf-8'))
             else:
-                if gui_done:
-
+                pass
         except:
             pass
 
