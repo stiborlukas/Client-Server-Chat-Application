@@ -22,8 +22,8 @@ import socket
 import threading
 
 host = "127.0.0.1"
-port = 2205
-# port = 9090
+# port = 2205
+port = 9090
 
 serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 serversocket.bind((host, port))
