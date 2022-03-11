@@ -73,9 +73,9 @@ def gui_loop():
     input_area.pack(padx=20, pady=5)
 
     def write():
-        message = f"{nickname}: {input_area.get('1', 'end')}"
+        message = f"{nickname}: {input_area.get('1.0', 'end')}"
         s.send(message.encode('utf-8'))
-        input_area.delete('1', 'end')
+        input_area.delete('1.0', 'end')
 
     send_button = tk.Button(win, text="SEND", command=write)
     send_button.pack(padx=20, pady=5)
