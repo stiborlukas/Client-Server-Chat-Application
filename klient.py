@@ -21,7 +21,8 @@ canvas= tk.Canvas(window, width= 1000, height= 750)
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-host = socket.gethostname()
+# host = socket.gethostname()
+host = "127.0.0.1"
 port = 2205
 
 s.connect((host, port))

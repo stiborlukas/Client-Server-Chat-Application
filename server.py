@@ -2,8 +2,8 @@ import socket
 
 serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-host = socket.gethostname()
-# host = "127.0.0.1"
+# host = socket.gethostname()
+host = "127.0.0.1"
 port = 2205
 
 
