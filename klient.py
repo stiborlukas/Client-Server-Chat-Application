@@ -47,3 +47,46 @@
 #
 #
 # window.mainloop()
+import socket
+import threading
+import tkinter as tk
+import tkinter.scrolledtext
+from tkinter import simpledialog
+
+
+host = "127.0.0.1"
+port = 2205
+# port = 9090
+
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+s.connect((host, port))
+
+msg = tk.Tk()
+msg.withdraw()
+
+nickname = simpledialog.askstring("nickname", "please choose nickname", parent=msg)
+
+gui_done = False
+running = True
+
+gui_thread = threading.Thread(target=gui_loop)
+receive_thread = threading.Thread(target=receive)
+
+gui_thread.start()
+receive_thread.start()
+
+def gui_loop():
+    pass
+
+def receive():
+    pass
+
+
+
+
+
+
+
+
+
