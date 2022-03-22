@@ -62,14 +62,30 @@ def write():
     input_area.delete('1.0', 'end')
 
 
+# def ask_name():
+#     window = tk.Tk()
+#     window.withdraw()
+#
+#     nickname = simpledialog.askstring("nickname", "please choose nickname", parent=window)
+#     message = f"{nickname}: {input_area.get('1.0', 'end')}"
+#     s.send(message.encode('utf-8'))
+
 def receive():
     while True:
-            # print("ffff")
-        msg = s.recv(1024)
+
+        msg = s.recv(1024).decode('utf-8')
         print(msg)
-        textarea.config(state='normal')
-        textarea.insert("end", msg)
-        textarea.config(state='disabled')
+        try:
+            if msg == "NICK":
+                # ask_name()
+                message = f"{nickname}: {input_area.get('1.0', 'end')}"
+                s.send(message.encode('utf-8'))
+        except:
+            # msg = s.recv(1024)
+            print(msg)
+            textarea.config(state='normal')
+            textarea.insert("end", msg)
+            textarea.config(state='disabled')
             # if message == "NICK":
             #     print("nick")
             #     s.send(nickname.encode('utf-8'))
@@ -86,10 +102,10 @@ s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 s.connect((host, port))
 
-# window = tk.Tk()
-# window.withdraw()
+window = tk.Tk()
+window.withdraw()
 
-# nickname = simpledialog.askstring("nickname", "please choose nickname", parent=msg)
+nickname = simpledialog.askstring("nickname", "please choose nickname", parent=window)
 
 # gui_done = False
 # running = True

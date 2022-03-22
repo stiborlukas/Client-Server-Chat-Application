@@ -37,27 +37,33 @@ clients = []
 nicknames = []
 
 
-def broadcast(msg, client):
+def broadcast(msg, client, nickname):
     # ano = msg
     # # print("gfhjfgdhj")
-    print(msg)
-    client.send(msg)
+    # print(msg)
+    message = f"{nickname} says {msg}"
+    client.send(message)
     # client.sendall(msg)
 
 
-def handle(client):
+def handle(client, nickname):
     while True:
         msg = client.recv(1024)
         if msg:
-            broadcast(msg, client)
+            broadcast(msg, client, nickname)
 
 
 def receive():
     while True:
         client, address = serversocket.accept()
+
+        client.send("NICK".encode('utf-8'))
+        nickname = client.recv(1024)
+        # print(nickname)
+
         print(f"connected with {str(address)}!")
         client.send("connected to the server".encode('utf-8'))
-        thread = threading.Thread(target=handle, args=(client,))
+        thread = threading.Thread(target=handle, args=(client, nickname,))
         thread.start()
 
 
