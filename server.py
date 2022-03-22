@@ -41,7 +41,7 @@ def broadcast(msg, client, nickname):
     # ano = msg
     # # print("gfhjfgdhj")
     # print(msg)
-    message = f"{nickname} says {msg}"
+    message = f"{nickname} says {msg}".encode('utf-8')
     client.send(message)
     # client.sendall(msg)
 
