@@ -67,9 +67,9 @@ def receive():
             # print("ffff")
         msg = s.recv(1024)
         print(msg)
-            # textarea.config(state='enabled')
-        # textarea.insert(END,  msg)
-            # textarea.config(state='disabled')
+        textarea.config(state='normal')
+        textarea.insert("end", msg)
+        textarea.config(state='disabled')
             # if message == "NICK":
             #     print("nick")
             #     s.send(nickname.encode('utf-8'))
@@ -85,8 +85,6 @@ port = 2205
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 s.connect((host, port))
-receive_thread = threading.Thread(target=receive)
-receive_thread.start()
 
 # window = tk.Tk()
 # window.withdraw()
@@ -119,6 +117,8 @@ input_area.pack(padx=20, pady=5)
 send_button = tk.Button(win, text="SEND", command=write)
 send_button.pack(padx=20, pady=5)
 
+receive_thread = threading.Thread(target=receive)
+receive_thread.start()
 win.mainloop()
 
 

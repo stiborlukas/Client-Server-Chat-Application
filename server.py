@@ -44,10 +44,12 @@ def broadcast(msg, client):
     client.send(msg)
     # client.sendall(msg)
 
+
 def handle(client):
     while True:
         msg = client.recv(1024)
-        broadcast(msg, client)
+        if msg:
+            broadcast(msg, client)
 
 
 def receive():
