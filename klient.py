@@ -41,7 +41,7 @@ def on_closing():
         sys.exit()
 
 
-# declsring variables
+# declaring variables
 host = "127.0.0.1"
 port = 9090
 

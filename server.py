@@ -39,7 +39,7 @@ def handle(client, nickname, clients, nicknames):
 
             else:
                 if len(msg) == 0:
-                    print("prazdny")
+                    pass
                 else:
                     print(len(msg))
                     broadcast(msg, client, nickname)
@@ -84,7 +84,6 @@ host = "127.0.0.1"
 port = 9090
 clients = []
 nicknames = []
-
 
 # socket connection
 serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
