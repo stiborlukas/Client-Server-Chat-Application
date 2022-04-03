@@ -1,6 +1,7 @@
 import socket
 import threading
 import tkinter as tk
+from tkinter import messagebox
 import tkinter.scrolledtext
 from tkinter import simpledialog
 import sys
@@ -8,7 +9,6 @@ import sys
 
 # odesilani zprav
 def write():
-    print("///")
     message = input_area.get('1.0', 'end')
     s.send(message.encode('utf-8'))
     input_area.delete('1.0', 'end')
@@ -19,18 +19,14 @@ def receive():
     while True:
         msg = s.recv(1024).decode('utf-8')
         print(msg)
-        print("1")
         try:
             if msg == "NICK":
-                print("2")
                 message = f"{nickname}: {input_area.get('1.0', 'end')}"
                 s.send(message.encode('utf-8'))
             elif stop:
-                print("tomas")
                 message = f"killprogram"
                 s.send(message.encode('utf-8'))
             else:
-                print("3")
                 textarea.config(state='normal')
                 textarea.insert("end", msg)
                 textarea.config(state='disabled')
@@ -38,6 +34,16 @@ def receive():
             print(e)
             s.close()
             sys.exit()
+
+
+def on_closing():
+    if messagebox.askokcancel("Quit", "Do you want to quit?"):
+        # receive_thread.terminate()
+        s.close()
+        win.destroy()
+        receive_thread.join()
+        # print(s)
+        sys.exit()
 
 
 # nastaveni promennych
@@ -81,4 +87,6 @@ receive_thread = threading.Thread(target=receive)
 receive_thread.start()
 stop = False
 
+
+win.protocol("WM_DELETE_WINDOW", on_closing)
 win.mainloop()

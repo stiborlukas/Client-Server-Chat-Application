@@ -35,14 +35,16 @@ def handle(client, nickname, clients, nicknames):
                 # print(nicknames)
                 # print("safidkshiuaghfduhbnudfghuisdfg")
                 online = f"List of online users requested by {nickname}"
+                online = online.encode('utf-8')
                 for client in clients:
+                    client.send(online)
                     for nickname in nicknames:
                         mess = nickname.translate({ord(':'): None})
-                        mess = f"{online}{mess}"
+                        # mess = f"{online}{mess}"
                         mess = mess.encode('utf-8')
                         client.send(mess)
 
-            elif msg:
+            else:
                 print("mozna")
                 broadcast(msg, client, nickname)
         except Exception as e:
