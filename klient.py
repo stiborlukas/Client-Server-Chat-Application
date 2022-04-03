@@ -23,9 +23,6 @@ def receive():
             if msg == "NICK":
                 message = f"{nickname}: {input_area.get('1.0', 'end')}"
                 s.send(message.encode('utf-8'))
-            elif stop:
-                message = f"killprogram"
-                s.send(message.encode('utf-8'))
             else:
                 textarea.config(state='normal')
                 textarea.insert("end", msg)

@@ -38,8 +38,11 @@ def handle(client, nickname, clients, nicknames):
                         client.send(mess)
 
             else:
-                print("mozna")
-                broadcast(msg, client, nickname)
+                if len(msg) == 0:
+                    print("prazdny")
+                else:
+                    print(len(msg))
+                    broadcast(msg, client, nickname)
 
         except Exception as e:
             print(e)
