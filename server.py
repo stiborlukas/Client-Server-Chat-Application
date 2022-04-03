@@ -1,72 +1,62 @@
 import socket
 import threading
 import logging
-# import pickle
 
 
-# odesilani vsem klientum
+# sending msg to all
 def broadcast(msg, client, nickname):
-    # zbaveni se \n
+    # deleting \n
     nick = nickname.strip()
     msg_temp = msg.strip()
 
-    # zprava kterou poslu
+    # msg
     message = f"{nick} {msg_temp}\n"
     message = message.encode('utf-8')
 
-    # poslani vsem klientum
+    # sending
     for client in clients:
         client.send(message)
 
 
-# prijimani zprav od klientu
+# receiving from clients
 def handle(client, nickname, clients, nicknames):
     while True:
-        print("ano")
         try:
-            # print("ne")
             msg = client.recv(1024).decode('utf-8')
             msg = msg.strip()
             print(msg)
-            if msg == "killprogram":
-                clients.remove(client)
-                print(clients)
+
+            # getting all users
             if msg == "?users?":
-                # print(nicknames)
-                # print("safidkshiuaghfduhbnudfghuisdfg")
                 online = f"List of online users requested by {nickname}"
                 online = online.encode('utf-8')
                 for client in clients:
                     client.send(online)
                     for nickname in nicknames:
                         mess = nickname.translate({ord(':'): None})
-                        # mess = f"{online}{mess}"
                         mess = mess.encode('utf-8')
                         client.send(mess)
 
             else:
                 print("mozna")
                 broadcast(msg, client, nickname)
+
         except Exception as e:
             print(e)
             logging.error(e)
-            # for client in clients:
-            #     clients.remove(client)
             clients.remove(client)
             nicknames.remove(nickname)
-            # error = "error :(".encode('utf-8')
-            # client.send(error)
             print(clients)
             break
 
 
-# zakladni pripojeni
+# basic connection
 def receive():
     while True:
         try:
             client, address = serversocket.accept()
 
-            # zeptat se na jmeno, pridat ho do listu
+            # get name and socket
             client.send("NICK".encode('utf-8'))
             nickname = client.recv(1024).decode("utf-8")
             clients.append(client)
@@ -75,7 +65,7 @@ def receive():
 
             print(f"connected with {str(address)}!")
 
-            # dat mu vedet ze pripojeny, spustit prijimani zprav
+            # first msg to user after connection and start receiving msg
             client.send("connected to the server\nview online users by typing '?users?'\n".encode('utf-8'))
             thread = threading.Thread(target=handle, args=(client, nickname, clients, nicknames,))
             thread.start()
@@ -86,23 +76,19 @@ def receive():
 # logging setup
 logging.basicConfig(filename='server_logs.log', filemode='w', format='%(asctime)s : %(message)s',datefmt='[%d/%m/%Y] %H:%M:%S' ,level=logging.DEBUG)
 
-# nastaveni promennych
+# declaring variables
 host = "127.0.0.1"
-# host = socket.gethostname()
-# port = 2205
 port = 9090
 clients = []
 nicknames = []
 
 
-# nastaveni pripojeni
+# socket connection
 serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 serversocket.bind((host, port))
-
 serversocket.listen()
-
 
 print(f"server running")
 
-# spusteni
+# start program
 receive()

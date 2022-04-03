@@ -7,14 +7,14 @@ from tkinter import simpledialog
 import sys
 
 
-# odesilani zprav
+# sending msg
 def write():
     message = input_area.get('1.0', 'end')
     s.send(message.encode('utf-8'))
     input_area.delete('1.0', 'end')
 
 
-# prijimani zprav
+# receiving msg from server
 def receive():
     while True:
         msg = s.recv(1024).decode('utf-8')
@@ -38,25 +38,21 @@ def receive():
 
 def on_closing():
     if messagebox.askokcancel("Quit", "Do you want to quit?"):
-        # receive_thread.terminate()
         s.close()
         win.destroy()
         receive_thread.join()
-        # print(s)
         sys.exit()
 
 
-# nastaveni promennych
+# declsring variables
 host = "127.0.0.1"
-# host = socket.gethostname()
-# port = 2205
 port = 9090
 
-# nastaveni pripojeni
+# socket connection
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect((host, port))
 
-# okno ve kterem se zeptam na jmeno
+# dialog for getting nickname
 window = tk.Tk()
 window.withdraw()
 nickname = simpledialog.askstring("nickname", "please choose nickname", parent=window)
@@ -79,14 +75,14 @@ msg_label.pack(padx=20, pady=5)
 input_area = tk.Text(win, height=3)
 input_area.pack(padx=20, pady=5)
 
-# win.bind('<Return>', write)
 send_button = tk.Button(win, text="SEND", command=write)
 send_button.pack(padx=20, pady=5)
 
+# -------------------------------------------
+
+# thread
 receive_thread = threading.Thread(target=receive)
 receive_thread.start()
-stop = False
-
 
 win.protocol("WM_DELETE_WINDOW", on_closing)
 win.mainloop()
