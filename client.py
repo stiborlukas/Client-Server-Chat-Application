@@ -1,85 +1,78 @@
 import socket
 import threading
-import tkinter as tk
-from tkinter import messagebox
-import tkinter.scrolledtext
 from tkinter import simpledialog
+from gui import ChatAppGUI 
 import sys
 
-
-# sending msg
-def write():
-    message = input_area.get('1.0', 'end')
-    s.send(message.encode('utf-8'))
-    input_area.delete('1.0', 'end')
-
-
-# receiving msg from server
-def receive():
-    while True:
-        msg = s.recv(1024).decode('utf-8')
-        print(msg)
-        try:
-            if msg == "NICK":
-                message = f"{nickname}: {input_area.get('1.0', 'end')}"
-                s.send(message.encode('utf-8'))
-            else:
-                textarea.config(state='normal')
-                textarea.insert("end", msg)
-                textarea.config(state='disabled')
-        except Exception as e:
-            print(e)
-            s.close()
-            sys.exit()
-
-
-def on_closing():
-    if messagebox.askokcancel("Quit", "Do you want to quit?"):
-        s.close()
-        win.destroy()
-        receive_thread.join()
-        sys.exit()
-
-
-# declaring variables
+# Deklarace proměnných
 host = "127.0.0.1"
 port = 9090
 
-# socket connection
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.connect((host, port))
+def send_message(message):
+    """
+    Odešle zprávu
+    Pokud je zpráva /clear nic neodesle ale provede clear
+    Cokoli jiného odesle na srv
+    """
+    if message.strip() == "/clear":
+        app.text_area.configure(state="normal")
+        app.text_area.delete("0.0", "end")
+        app.text_area.configure(state="disabled")
+    else:
+        # print(f"Sending message: {message}") 
+        s.send(message.encode("utf-8"))
 
-# dialog for getting nickname
-window = tk.Tk()
-window.withdraw()
-nickname = simpledialog.askstring("nickname", "please choose nickname", parent=window)
+def receive_messages():
+    """
+    Zpracování příchozích zpráv
+    Porad posloucha a prijima zpravy
+    Prvni zprava od srv bude NICK a na to odesilam svoji prezdivku
+    Jinak se odkazuji na gui.py pro zobrazeni zpravy
+    """
+    while True:
+        try:
+            msg = s.recv(1024).decode("utf-8")
+            if msg == "NICK":
+                s.send(nickname.encode("utf-8"))
+            else:
+                app.display_message(msg)
+        except Exception as e:
+            print(f"Error: {e}")
+            s.close()
+            break
 
-# -------------------------------------tkinter
-win = tk.Tk()
+def close_app():
+    """
+    Zavření aplikace
+    """
+    s.close()
+    app.quit()
+    sys.exit()
 
-win.configure(bg="lightgray")
+# Spuštění GUI
+if __name__ == "__main__":
+    # Socket connection
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.connect((host, port))
 
-chat_label = tk.Label(win, text="CHat:", bg="lightgray")
-chat_label.pack(padx=20, pady=5)
+    # Získání přezdívky od uživatele
+    while True:
+        nickname = simpledialog.askstring("Nickname", "Please choose a nickname:")
 
-textarea = tk.scrolledtext.ScrolledText(win)
-textarea.pack(padx=20, pady=5)
-textarea.config(state='disabled')
+        if nickname is None:
+            sys.exit()
+        elif not nickname.strip():
+            continue
+        else:
+            break
 
-msg_label = tk.Label(win, text="Message:", bg="lightgray")
-msg_label.pack(padx=20, pady=5)
 
-input_area = tk.Text(win, height=3)
-input_area.pack(padx=20, pady=5)
+    # Inicializace aplikace s callbacky
+    app = ChatAppGUI(send_callback=send_message, close_callback=close_app)
 
-send_button = tk.Button(win, text="SEND", command=write)
-send_button.pack(padx=20, pady=5)
+    # Threading
+    receive_thread = threading.Thread(target=receive_messages, daemon=True)
+    receive_thread.start()
 
-# -------------------------------------------
-
-# thread
-receive_thread = threading.Thread(target=receive)
-receive_thread.start()
-
-win.protocol("WM_DELETE_WINDOW", on_closing)
-win.mainloop()
+    # Main loop
+    app.mainloop()
