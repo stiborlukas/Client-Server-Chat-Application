@@ -1,6 +1,6 @@
 # &#x20;Client-Server Chat Application
 
-A basic **Client-Server Chat Application** built using Python's `socket` module for networking, `tkinter` for the GUI, and `customtkinter` for enhanced user experience. It supports real-time messaging, private messaging, and simple chat commands, with the potential for **End-to-End Encryption (E2EE)** as a future enhancement.
+A basic **Client-Server Chat Application** built using Python's `socket` module for networking, `tkinter` for the GUI, and `customtkinter` for enhanced user experience. It supports real-time messaging, private messaging, and simple chat commands.
 
 ## Features
 
@@ -31,7 +31,7 @@ A basic **Client-Server Chat Application** built using Python's `socket` module 
 
 ### Client Side (Frontend)
 
-- **Tkinter and CustomTkinter GUI**:
+- **CustomTkinter GUI**:
 
   - User-friendly interface includes:
     - A chat display area for messages.
@@ -62,7 +62,7 @@ A basic **Client-Server Chat Application** built using Python's `socket` module 
 
 ### Client
 
-1. Connects to the server and displays real-time messages in a Tkinter GUI.
+1. Connects to the server and displays real-time messages in a CustomTkinter GUI.
 2. Supports private messaging using `@username`.
 3. Provides chat commands for viewing users, clearing the chat, and accessing help.
 4. Handles server connection gracefully, including disconnections and errors.
@@ -74,14 +74,6 @@ A basic **Client-Server Chat Application** built using Python's `socket` module 
 - **Command System**: Provides a simple way to access chat functionalities.
 - **Enhanced GUI**: CustomTkinter provides a modern, responsive interface.
 - **Real-time Updates**: Ensures all messages are updated across clients instantly.
-
-## Possible Enhancements
-
-- **End-to-End Encryption (E2EE)** for secure communication.
-- **Media Sharing** for images or files.
-- **TLS/SSL Encryption** to secure network communication.
-- **Improved Error Handling** for network issues and disconnections.
-- **User Authentication** for enhanced security and permissions.
 
 ## Requirements
 
